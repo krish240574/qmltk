@@ -1,7 +1,10 @@
-  inm:{[labelsinnode]if[0=(count labelsinnode);0];p:sum over (1=labelsinnode);n:sum over (0=labelsinnode); $[p>n;n;p]}
-  fbf:{[f;t;besterror;bestfeature;bestl;bestr;i]leftsplit:fdata[f[i]]=0;rightsplit:fdata[f[i]]=1;error:(inm[leftsplit]+inm[rightsplit])%(count fdata);if[error<=besterror;besterror:error;bestfeature:f[i];bestl:leftsplit;bestr:rightsplit];$[(i+1)>=(count f);(bestfeature;bestl;bestr);fbf[f;target;besterror;bestfeature;bestl;bestr;i+1]]}
-  createleaf:{[targetvalues]leaf:("none";"none";"none";1);num1s:count where targetvalues = 1;numm1s:count where targetvalues = -1;$[num1s>numm1s;leaf:leaf,1;leaf:leaf,-1];leaf}
+inm:{[labelsinnode]if[0=(count labelsinnode);0];p:sum over (1=labelsinnode);n:sum over (0=labelsinnode); $[p>n;n;p]}
+fbf:{[f;t;besterror;bestfeature;bestl;bestr;i]leftsplit:fdata[f[i]]=0;rightsplit:fdata[f[i]]=1;error:(inm[leftsplit]+inm[rightsplit])%(count fdata);if[error<=besterror;besterror:error;bestfeature:f[i];bestl:leftsplit;bestr:rightsplit];$[(i+1)>=(count f);(bestfeature;bestl;bestr);fbf[f;target;besterror;bestfeature;bestl;bestr;i+1]]}
+createleaf:{[targetvalues]leaf:("none";"none";"none";1);num1s:count where targetvalues = 1;numm1s:count where targetvalues = -1;$[num1s>numm1s;leaf:leaf,1;leaf:leaf,-1];leaf}
 
+
+/ call preparedata here - to setup data
+preparedata;;
 f: cols fdata;target:`safeloans;besterror:10;bestfeature:"none";indx:0;
 kumartree:{[master;data;f;target;besterror;bestfeature;indx]
   
