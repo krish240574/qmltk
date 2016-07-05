@@ -5,14 +5,15 @@ prepdata:{[k]
   sz: count k;
   trsz:"i"$0.8*sz;
   tssz:trsz+ til (sz-trsz);
-  tr:k[til trsz];
-  ts:k[tssz];
+  tr:k[til trsz]; / training
+  ts:k[tssz]; / test 
   w:2 1#-47000.0 1.0; / initial weights
   f:tr[`sqftliving];
   c: 17290 1 # 1;
   f:c,'f;
   (tr;ts;f;w)}
-
+  
+/ Regression with gradient descent
 rgd:{[w;f;op;tl;s]p:sum each f*\:w;
    show flip w;
    e:p-op;
@@ -25,6 +26,9 @@ rgd:{[w;f;op;tl;s]p:sum each f*\:w;
 
 \d .
 
+/ Prep data code here
+
+/ Read CSV for housing data.
 c:`id`price`sqftliving`sqftliving15;
 colStr:"S F  I             I ";
 .Q.fs[{`dataset insert flip c!(colStr;",")0:x}]`:e.csv;
@@ -38,6 +42,8 @@ initdata:.Kumar.prepdata[dataset]
 /s:7.0e-012
 /w:.Kumar.rgd[w;f;op;tl;s]
 /show flip w
+
+
 / mult regression
 w:3 1 # -100000., 1., 1.
 tr:initdata@0
