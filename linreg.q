@@ -15,10 +15,8 @@ prepdata:{[k]
   
 / Regression with gradient descent
 rgd:{[w;f;op;tl;s]p:sum each f*\:w;
-   show flip w;
    e:p-op;
    d:2*(sum each(flip f)*\:e);
-   /show d;
    gss:sum (d*d);	
    gm:sqrt gss;
    $[gm[0]>tl;rgd[w-(s*d);f;op;tl;s];w]
@@ -45,9 +43,13 @@ initdata:.Kumar.prepdata[dataset]
 
 
 / mult regression
+/ Initial weights
 w:3 1 # -100000., 1., 1.
+/ train data
 tr:initdata@0
+/ features
 f:tr[`sqftliving`sqftliving15]
+/ constant column for intercept
 c: 1 17290  # 1;
 f:flip c,f;
 op:tr[`price]
