@@ -1,12 +1,13 @@
 
 / Regression with gradient descent
-rgd:{[w;f;op;tl;s]p:f$w;
+rgd:{[w;f;op;tl;s;counter]p:f$w;
+	show counter;
 	e:p-op;
-	d:2*((flip f)$e);
+	d:(2*(flip f)$e)+(2*l2_p*w); / L2 - ridge regression derivative
 	gss:sum (d*d);
 	gm:sqrt gss; 
 	show flip w; 
-	$[sum (gm>tl)=1;rgd[w-(s*d);f;op;tl;s]; w]}	;
+	$[(counter<niter);rgd[w-(s*d);f;op;tl;s;counter+1]; w]}	;
 
 / Read CSV for housing data.
   c:`id`date`price`bedrooms`bathrooms`sqft_living`sqft_lot`floors`waterfront`view`condition`grade`sqft_above`sqft_basement`yr_built`yr_renovated`zipcode`lat`long`sqft_living15`sqft_lot15;
@@ -32,9 +33,12 @@ rgd:{[w;f;op;tl;s]p:f$w;
   f:flip cc,f;
   op:"f"$tr[`price];
   tl:"f"$1e+009;
-  s:"f"$4.0e-12;
+  s:"f"$1.0e-12;
+  l2_p:0.0;
+  counter:0;
+  niter:1000;
   show "Calling rgd";
-  w:rgd[w;f;op;tl;s];
+  w:rgd[w;f;op;tl;s;counter];
   show "Weights :"
   show flip w;
 
@@ -47,9 +51,4 @@ rgd:{[w;f;op;tl;s]p:f$w;
   err:preds - ts[`price];
   sqerr:sum (err*err);
   show "Sum of squared errors:"
-  show sqerr;
-
-
-
-
-
+  show sum sqerr;
