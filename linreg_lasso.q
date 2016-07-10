@@ -6,7 +6,7 @@ lasso:{[i;ctr1]
       oldwt:w[i];
       ns:shape normtr;
       prediction:(count normtr)#normtr$(w);
-      prediction[where prediction=0n]:0.0;
+      prediction[where prediction=0n]:0.0; 
       temp:((ns[0],1)#normtr[;i])$(1,ns[1])#w;
       roi:sum over (normtr[;i]*(o-prediction+(temp)));
       newweighti:0.0;
@@ -14,10 +14,11 @@ lasso:{[i;ctr1]
       if[roi<(-1*l1penalty)%2.0;newweighti:roi+l1penalty%2];
       if[roi>l1penalty%2.0;newweighti:roi-l1penalty%2];
       w[i]:newweighti; / update weight[i]
-      $[i<(count w[0]);if[(oldwt-newweighti)<tolerance;ctr:ctr+1;lasso[i+1;ctr1]];ctr1]
+      if[(oldwt-newweighti)<tolerance;ctr1:ctr1+1];
+      $[i<(count w[0]);lasso[i+1;ctr1];ctr1]
       };
 
-lassodriver:{[tmp]show "lasso";ctr:0;ctr:lasso[0;ctr];
+lassodriver:{[tmp]ctr:0;ctr:lasso[0;ctr];
   $[ctr<(count w);lassodriver;show "lasso finished"]
  };
 
