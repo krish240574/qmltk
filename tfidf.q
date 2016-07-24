@@ -16,7 +16,7 @@ dr:distinct raze kspl;
 
 lc:{dr in kspl[x]}each til count kspl;
 o:(enlist each dr), ' sum lc;
-
+ 
 fl:flip lc;
 efl:where each fl;
 o:o,'enlist each efl;
