@@ -1,35 +1,57 @@
 
+pi:acos -1
+
+nor:{$[x=2*n:x div 2;raze sqrt[-2*log n?1f]*/:(sin;cos)@\:(2*pi)*n?1f;-1_.z.s 1+x]}
+
 c:`URI`name`text;
 colStr:"SSS";
 .Q.fs[{`wiki insert flip c!(colStr;",")0:x}]`:people_wiki.csv;
+
 //
-numDocs:100;
+numDocs:50;
 wiki:wiki[til numDocs];
 s:string wiki[`text];
-spl:{" " vs s[x]}each til count wiki;
+spl: " " vs 's ;
+gt: group each spl;
 
-kspl:{key group spl[x]}each til count wiki;
-gspl:{count each value group spl[x]}each til count wiki;
-tf:{(enlist each kspl[x]),'gspl[x]}each til count gspl;
+tmp:value each count each 'gt;
 
-dr:distinct raze kspl;
+kspl:key each  group each  spl;
 
-lc:{dr in kspl[x]}each til count kspl;
-o:(enlist each dr), ' sum lc;
- 
-fl:flip lc;
-efl:where each fl;
-o:o,'enlist each efl;
+tf:{(enlist each kspl[x]),'tmp[x]}each til count tmp;
 
-oo:(enlist each o[;0]),'(enlist each o[;1]),'flip {sum each x=o[;2]}each til numDocs;
-fino:{oo[where "b"$oo[;x]][;0 1]}each (2+til numDocs);
+df: count each group raze kspl;
 
-tfidf:tf[;;1]*(log numDocs%fino[;;1]);
+q:count each kspl;
+h:til numDocs;
+hehe:raze q#'h;
+hehe:([]locations:hehe);
+f:jt2t1,'hehe;
+tfidf:([]tfidf:f[`tf]*(log numDocs%f[`v]))
+f:f,'tfidf;
 
-rt:raze tfidf
-rt[where rt=0]:1.0
+f1:([loc]k:f[`k];v:f[`v];tf:f[`tf];tfidf:f[`tfidf])
 
-shp:shape each tfidf
-reshp:{shp[x] # rt[x]}each til count tfidf
-atlast:{(enlist each kspl[x]),'reshp[x]}each til numDocs
+r:raze tf;
+t1:([]k:r[;0];tf:r[;1])
+t2:([]k:key df;v:value df)
+
+jt2t1:ej[`k;t2;t1]
+
+
+/ rnos: ((count dr),16)#nor ((count dr)*16);
+/ nc:sum (-1#count oo[0]);
+/ corpus:flip "f"$oo[;2+til(nc-2)];
+/ dotprod:corpus $ rnos;
+/ tmp:raze dotprod;
+/ tmp[where tmp>0]:1.0;
+/ tmp[where tmp<0]:0.0;
+/ dotprod:((count dr),16)#tmp;
+/ bni:sum each(2 xexp reverse (til 16)) */: dotprod;
+
+
+
+
+
+
 
