@@ -8,7 +8,7 @@ colStr:"SSS";
 .Q.fs[{`wiki insert flip c!(colStr;",")0:x}]`:people_wiki.csv;
 
 //
-numDocs:50;
+numDocs:count wiki;
 wiki:wiki[til numDocs];
 s:string wiki[`text];
 spl: " " vs 's ;
